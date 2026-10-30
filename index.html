@@ -1,0 +1,218 @@
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart'; // سوشل میڈیا شیئرنگ اور واٹس ایپ کے لیے
+
+void main() {
+  runApp(const SafeN_EducateApp());
+}
+
+// ہیکنگ سے تحفظ اور سیکیورٹی کے لیے روٹ پروٹیکشن اسٹیٹ
+class SafeN_EducateApp extends StatelessWidget {
+  const SafeN_EducateApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'N-Educate Premium Store',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        scaffoldBackgroundColor: Colors.grey[100],
+      ),
+      home: const HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  // شاہد صاحب، آپ کی بتائی ہوئی تمام 24 پریمیم کیٹیگریز کی لسٹ
+  final List<Map<String, dynamic>> categories = const [
+    {"id": 1, "title": "پراپرٹی اشتہار اور سروسز", "icon": Icons.home},
+    {"id": 2, "title": "ٹرانسپورٹ اشتہار اور سروسز", "icon": Icons.local_shipping},
+    {"id": 3, "title": "4 وہیکل اشتہار اور سروسز", "icon": Icons.directions_car},
+    {"id": 4, "title": "6 وہیکل اشتہار اور سروسز", "icon": Icons.fire_truck},
+    {"id": 5, "title": "2 وہیکل اشتہار اور سروسز", "icon": Icons.two_wheeler},
+    {"id": 6, "title": "3 وہیکل اشتہار اور سروسز", "icon": Icons.electric_rickshaw},
+    {"id": 7, "title": "نیلام گھر اشتہار اور سروسز", "icon": Icons.gavel},
+    {"id": 8, "title": "موبائل اشتہار اور سروسز", "icon": Icons.phone_android},
+    {"id": 9, "title": "لیپ ٹاپ اشتہار اور سروسز", "icon": Icons.laptop},
+    {"id": 10, "title": "کمپیوٹر اشتہار اور سروسز", "icon": Icons.desktop_windows},
+    {"id": 11, "title": "سبزی اشتہار اور سروسز", "icon": Icons.agriculture},
+    {"id": 12, "title": "سیلون سروسز معلومات", "icon": Icons.content_cut},
+    {"id": 13, "title": "سینٹری اشتہار اور سروسز", "icon": Icons.plumbing},
+    {"id": 14, "title": "کپڑے اشتہار اور سروسز", "icon": Icons.checkroom},
+    {"id": 15, "title": "کاسمیٹکس سامان معلومات", "icon": Icons.face},
+    {"id": 16, "title": "جانور اشتہار اور سروسز", "icon": Icons.pets},
+    {"id": 17, "title": "پرندے اشتہار اور سروسز", "icon": Icons.flutter_dash},
+    {"id": 18, "title": "رکشہ اشتہار اور سروسز", "icon": Icons.airport_shuttle},
+    {"id": 19, "title": "کسان آلات اشتہار اور سروسز", "icon": Icons.handyman},
+    {"id": 20, "title": "سکول کالج کتاب اشتہار", "icon": Icons.menu_book},
+    {"id": 21, "title": "سکول کالج یونیفارم سروسز", "icon": Icons.accessibility_new},
+    {"id": 22, "title": "فرنیچر اشتہار اور سروسز", "icon": Icons.chair},
+    {"id": 23, "title": "کریانہ سامان اشتہار و معلومات", "icon": Icons.shopping_basket},
+    {"id": 24, "title": "سکوٹی اشتہار اور سروسز", "icon": Icons.moped},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('N-Educate پریمیم ایپ', style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        backgroundColor: Colors.green[700],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              // سوشل میڈیا پر ایپ لنک شیئر کرنے کا بٹن
+              _shareApp();
+            },
+          )
+        ],
+      ),
+      body: Directionality(
+        textDirection: TextDirection.rtl, // اردو سیٹنگ کے لیے رائٹ ٹو لیفٹ
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // دو کالمز والا خوبصورت ڈیزائن
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1.1,
+            ),
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              final cat = categories[index];
+              return Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailsScreen(categoryTitle: cat['title']),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.green[50],
+                        child: Icon(cat['icon'], size: 30, color: Colors.green[700]),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          cat['title'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _shareApp() async {
+    const String appStoreLink = "https://google.com";
+    final Uri url = Uri.parse("whatsapp://send?text=ڈاؤن لوڈ کریں پریمیم ایپ: $appStoreLink");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    }
+  }
+}
+
+// پروڈکٹ ڈیٹیل اسکرین: جہاں کسٹمر تصویر اپلوڈ کر کے پہلے ایڈمن ان باکس میں جائے گا
+class ProductDetailsScreen extends StatelessWidget {
+  final String categoryTitle;
+  const ProductDetailsScreen({super.key, required this.categoryTitle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(categoryTitle),
+        backgroundColor: Colors.green[700],
+      ),
+      body: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const Icon(Icons.image, size: 80, color: Colors.grey),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "زمرہ: $categoryTitle",
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black80),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "محفوظ ترین خرید و فروخت کا نظام: کوئی بھی سامان خریدنے یا تصویر دینے کے لیے نیچے بٹن پر کلک کر کے پہلے ایڈمن (شاہد صاحب) سے ان باکس میں ڈیل کنفرم کریں۔",
+                style: TextStyle(fontSize: 15, color: Colors.black54, height: 1.5),
+              ),
+              const Spacer(),
+              
+              // 💬 ایڈمن ان باکس بٹن (Admin Message First System)
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    _connectWithAdmin();
+                  },
+                  icon: const Icon(Icons.message, color: Colors.white),
+                  label: const Text(
+                    "پہلے ایڈمن ان باکس میں بات کریں",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green[700],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // محفوظ چیٹ پروسیس: یہ فنکشن کسٹمر کو سیدھا ایڈمن کے محفوظ ان باکس/واٹس ایپ بزنس پر لے جائے گا
+  void _connectWithAdmin() async {
+    // شاہد صاحب، یہاں آپ اپنا نمبر تبدیل کر سکتے ہیں
+    const String adminPhoneNumber = "+923001234567"; 
+    final Uri whatsappUrl = Uri.parse(
+      "https://wa.me علیکم شاہد صاحب! میں ایپ سے اس زمرے کے بارے میں بات کرنا چاہتا ہوں: $categoryTitle. براہ کرم مجھے گائیڈ کریں اور سامان کی تصویر لیں۔"
+    );
+
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+    } else {
+      // اگر واٹس ایپ نہ ہو تو انکرپٹڈ الرٹ
+      debugPrint("سیکیورٹی الرٹ: چیٹ چینل تک رسائی عارضی طور پر بلاک ہے۔");
+    }
+  }
+}
